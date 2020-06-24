@@ -19,6 +19,38 @@ namespace _2048
             }
         }
 
+        public bool IsEndGame(){
+            List<List<int>> tmpMapTable = new List<List<int>>(MapTable.Count);
+            for (int r=0; r<MapTable.Count; r++){
+                var tmp = new List<int>(MapTable[r]);
+                tmpMapTable.Add(tmp);
+            }
+            bool end = MoveLeft(tmpMapTable);
+            if (end){return false;}
+            tmpMapTable = new List<List<int>>(MapTable.Count);
+            for (int r=0; r<MapTable.Count; r++){
+                var tmp = new List<int>(MapTable[r]);
+                tmpMapTable.Add(tmp);
+            }
+            end = MoveRight(tmpMapTable);
+            if (end){return false;}
+            tmpMapTable =new List<List<int>>(MapTable.Count);
+            for (int r=0; r<MapTable.Count; r++){
+                var tmp = new List<int>(MapTable[r]);
+                tmpMapTable.Add(tmp);
+            }
+            end = MoveUp(tmpMapTable);
+            if (end){return false;}
+            tmpMapTable =new List<List<int>>(MapTable.Count);
+            for (int r=0; r<MapTable.Count; r++){
+                var tmp = new List<int>(MapTable[r]);
+                tmpMapTable.Add(tmp);
+            }
+            end = MoveDown(tmpMapTable);
+            if (end){return false;}
+            return true;
+        }
+
         public bool AddRandomValue(int val){
             bool added = false;
             List<Tuple<int,int>> free = new List<Tuple<int,int>>();
@@ -40,35 +72,47 @@ namespace _2048
         }
     
         public bool MoveLeft(){
+            return MoveLeft(MapTable);
+        }
+        public bool MoveLeft(List<List<int>> mapTable){
             int st = 0;
-            for (int r=0; r<MapTable.Count;r++){
-                st += MoveRow(r,true);
+            for (int r=0; r<mapTable.Count;r++){
+                st += MoveRow(mapTable, r,true);
             }
             return st!=0;
         }
         public bool MoveRight(){
+            return MoveRight(MapTable);
+        }
+        public bool MoveRight(List<List<int>> mapTable){
             int st = 0;
-            for (int r=0; r<MapTable.Count;r++){
-                st += MoveRow(r,false);
+            for (int r=0; r<mapTable.Count;r++){
+                st += MoveRow(mapTable, r,false);
             }
             return st!=0;
         }
         public bool MoveUp(){
+            return MoveUp(MapTable);
+        }
+        public bool MoveUp(List<List<int>> mapTable){
             int st = 0;
-            for (int c=0; c<MapTable[0].Count;c++){
-                st += MoveCol(c,true);
+            for (int c=0; c<mapTable[0].Count;c++){
+                st += MoveCol(mapTable, c,true);
             }
             return st!=0;
         }
         public bool MoveDown(){
+            return MoveDown(MapTable);
+        }
+        public bool MoveDown(List<List<int>> mapTable){
             int st = 0;
-            for (int c=0; c<MapTable[0].Count;c++){
-                st += MoveCol(c,false);
+            for (int c=0; c<mapTable[0].Count;c++){
+                st += MoveCol(mapTable, c,false);
             }
             return st!=0;
         }
 
-        private int MoveRow(int rowIndex, bool left){
+        private int MoveRow(List<List<int>> mapTable, int rowIndex, bool left){
             int start = 1;
             int end = 3;
             int iter = 1;
@@ -82,16 +126,16 @@ namespace _2048
             while(!isEnd){
                 isEnd = true;
                 for (int c = start; left ? c <= end : c >= end; c=c+iter){
-                    if (MapTable[rowIndex][c]!=0){
-                        if (MapTable[rowIndex][c-iter]==0){
-                            MapTable[rowIndex][c-iter] = MapTable[rowIndex][c];
-                            MapTable[rowIndex][c]=0;
+                    if (mapTable[rowIndex][c]!=0){
+                        if (mapTable[rowIndex][c-iter]==0){
+                            mapTable[rowIndex][c-iter] =mapTable[rowIndex][c];
+                            mapTable[rowIndex][c]=0;
                             stepCount++;
                             isEnd = false;
                         }else{
-                            if (MapTable[rowIndex][c-iter] == MapTable[rowIndex][c]){
-                                MapTable[rowIndex][c-iter] = MapTable[rowIndex][c]*2;
-                                MapTable[rowIndex][c]=0;
+                            if (mapTable[rowIndex][c-iter] == mapTable[rowIndex][c]){
+                                mapTable[rowIndex][c-iter] = mapTable[rowIndex][c]*2;
+                                mapTable[rowIndex][c]=0;
                                 stepCount++;
                                 isEnd = false;
                             }
@@ -101,7 +145,7 @@ namespace _2048
             }
             return stepCount;
         }
-        private int MoveCol(int colIndex, bool up){
+        private int MoveCol(List<List<int>> mapTable, int colIndex, bool up){
             int start = 1;
             int end = 3;
             int iter = 1;
@@ -115,16 +159,16 @@ namespace _2048
             while(!isEnd){
                 isEnd = true;
                 for (int r = start; up ? r <= end : r >= end; r=r+iter){
-                    if (MapTable[r][colIndex]!=0){
-                        if (MapTable[r-iter][colIndex]==0){
-                            MapTable[r-iter][colIndex] = MapTable[r][colIndex];
-                            MapTable[r][colIndex]=0;
+                    if (mapTable[r][colIndex]!=0){
+                        if (mapTable[r-iter][colIndex]==0){
+                            mapTable[r-iter][colIndex] = mapTable[r][colIndex];
+                            mapTable[r][colIndex]=0;
                             stepCount++;
                             isEnd = false;
                         }else{
-                            if (MapTable[r-iter][colIndex] == MapTable[r][colIndex]){
-                                MapTable[r-iter][colIndex] = MapTable[r][colIndex]*2;
-                                MapTable[r][colIndex]=0;
+                            if (mapTable[r-iter][colIndex] == mapTable[r][colIndex]){
+                                mapTable[r-iter][colIndex] = mapTable[r][colIndex]*2;
+                                mapTable[r][colIndex]=0;
                                 stepCount++;
                                 isEnd = false;
                             }

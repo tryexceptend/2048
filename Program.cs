@@ -38,8 +38,10 @@ namespace _2048
                 if (stepFl){
                     stepCount++;
                     endGame = map.AddRandomValue(2);
-                    if (!endGame){
-                        isRun=false;
+                }else{
+                    //end game test
+                    if (map.IsEndGame()){
+                        isRun = false;
                     }
                 }
             }
